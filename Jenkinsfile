@@ -22,7 +22,7 @@ pipeline {
 
     stages {
 
-        // ── Shared: always runs first ─────────────────────────────────────
+        // ── Shared: always runs first ───────────────────────────────────
         stage("Prepare") {
             steps {
                 script {
@@ -44,7 +44,7 @@ pipeline {
             }
         }
 
-        // ══ MR PIPELINE ══════════════════════════════════════════════════
+        // ══ MR PIPELINE ════════════════════════════════════════════════
         stage("Checkstyle") {
             when {
                 changeRequest()   // only runs for merge/pull requests
