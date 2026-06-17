@@ -35,6 +35,15 @@ pipeline {
             }
         }
 
+        stage("Verify Java & Maven") {
+            steps {
+                sh """
+                    java -version
+                    mvn -v
+                """
+            }
+        }
+
         // ══ MR PIPELINE ══════════════════════════════════════════════════
         stage("Checkstyle") {
             when {
