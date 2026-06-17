@@ -11,10 +11,10 @@ pipeline {
         label "agent"
     }
 
-    tools {
-        maven "maven-3.9"
-        jdk   "jdk-17"
-    }
+    // tools {
+    //     maven "maven-3.9"
+    //     jdk   "jdk-17"
+    // }
 
     environment {
         NEXUS_CREDS = credentials("nexus-credentials")
