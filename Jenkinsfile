@@ -1,6 +1,6 @@
 // Jenkinsfile
-def NEXUS_HOST      = "172.18.248.201:8083"   
-def NEXUS_MAIN_HOST = "172.18.248.201:8084"
+def NEXUS_HOST      = "host.docker.internal:8083"   
+def NEXUS_MAIN_HOST = "host.docker.internal:8084"
 def MR_IMAGE        = "${NEXUS_HOST}/spring-petclinic"
 def MAIN_IMAGE      = "${NEXUS_MAIN_HOST}/spring-petclinic"
 def SHORT_COMMIT    = ""
