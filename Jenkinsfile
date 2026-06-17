@@ -55,9 +55,9 @@ pipeline {
             post {
                 always {
                     // Publish checkstyle report as job artifact
-                    recordIssues(
-                        tools: [checkStyle(pattern: "**/checkstyle-result.xml")]
-                    )
+                    // recordIssues(
+                    //     tools: [checkStyle(pattern: "**/checkstyle-result.xml")]
+                    // )
                     archiveArtifacts artifacts: "**/checkstyle-result.xml",
                                      allowEmptyArchive: true
                 }
