@@ -18,6 +18,7 @@ pipeline {
 
     environment {
         NEXUS_CREDS = credentials("nexus-credentials")
+        DOCKER_HOST = "unix:///var/run/docker.sock"
     }
 
     stages {
