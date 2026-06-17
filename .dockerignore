@@ -1,0 +1,36 @@
+# ============================================================
+# .dockerignore — keeps the Docker build context lean
+# ============================================================
+
+# Git metadata
+.git
+.gitignore
+.gitattributes
+
+# IDE / editor folders
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Maven build output (only relevant for the simple Dockerfile;
+# the multi-stage build uses Maven *inside* the container)
+# target/          ← intentionally NOT ignored so Dockerfile can COPY from it
+
+# Test reports
+**/surefire-reports/
+
+# Docker files themselves (no need to copy into the image)
+Dockerfile*
+docker-compose*.yml
+.env
+.env.example
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# README / docs
+*.md
+docs/

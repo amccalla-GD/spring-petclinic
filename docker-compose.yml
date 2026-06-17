@@ -1,0 +1,109 @@
+# ============================================================
+# docker-compose.yml — Spring PetClinic + MySQL
+# ============================================================
+# Starts two containers:
+#   • db   — MySQL 8 configured with custom credentials
+#   • app  — Spring PetClinic, waits for DB to be healthy
+#
+# USAGE:
+#   # First time (or after source changes):
+#   docker compose up --build
+#
+#   # Subsequent runs (no source changes):
+#   docker compose up
+#
+#   # Tear everything down (keeps DB volume):
+#   docker compose down
+#
+#   # Tear down AND delete the DB volume:
+#   docker compose down -v
+#
+# CREDENTIALS:
+#   Override any variable in a .env file next to this file,
+#   e.g.:
+#       MYSQL_ROOT_PASSWORD=supersecret
+#       MYSQL_PASSWORD=petclinic
+# ============================================================
+
+services:
+
+  # ──────────────────────────────────────────
+  # MySQL 8 database
+  # ──────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: petclinic-db
+    restart: unless-stopped
+
+    environment:
+      # Root password (required by the MySQL image)
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+
+      # Database that Spring PetClinic will connect to
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-petclinic}
+
+      # Application user & password
+      MYSQL_USER: ${MYSQL_USER:-petclinic}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-petclinic}
+
+    ports:
+      # Expose DB on the host for inspection tools (e.g. TablePlus).
+      # Remove this section if you don't need host access.
+      - "3306:3306"
+
+    volumes:
+      # Named volume so data survives container restarts
+      - db_data:/var/lib/mysql
+
+    healthcheck:
+      # Wait until MySQL is ready to accept connections
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
+             "-u", "root", "--password=${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ──────────────────────────────────────────
+  # Spring PetClinic application
+  # ──────────────────────────────────────────
+  app:
+    # Build from the multi-stage Dockerfile in the same directory.
+    # Switch to `image: spring-petclinic:simple` if you prefer the
+    # pre-built artifact variant.
+    build:
+      context: .
+      dockerfile: Dockerfile.multistage #Dockerfile
+
+    container_name: petclinic-app
+    restart: unless-stopped
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      # Activate the 'mysql' Spring profile so PetClinic uses MySQL
+      # instead of the default in-memory H2 database.
+      SPRING_PROFILES_ACTIVE: mysql
+
+      # JDBC URL — uses the service name 'db' as the hostname
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE:-petclinic}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+
+      # Credentials must match what was given to the DB container
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-petclinic}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD:-petclinic}
+
+      # Let Hibernate initialise / validate the schema automatically
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+
+      # Optional JVM heap tuning
+      JAVA_OPTS: ${JAVA_OPTS:--Xmx512m -Xms256m}
+
+    depends_on:
+      db:
+        # Don't start the app until MySQL passes its health-check
+        condition: service_healthy
+
+volumes:
+  # Persists MySQL data across `docker compose down` cycles
+  db_data:

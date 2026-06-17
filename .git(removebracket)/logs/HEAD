@@ -1,0 +1,4 @@
+0000000000000000000000000000000000000000 c7ee170434ec3e369fdc9201290ba2ea4c92b557 amccalla <amccalla@griddynamics.com> 1778623837 -0500	clone: from github.com:amccalla-GD/spring-petclinic.git
+c7ee170434ec3e369fdc9201290ba2ea4c92b557 52650e0013d16aab1c72bf1beec1e6a4980eef55 amccalla <amccalla@griddynamics.com> 1778627279 -0500	commit: Add Docker and docker-compose configuration
+52650e0013d16aab1c72bf1beec1e6a4980eef55 42852bea885e45300d78b79f7b369ca79443abe3 amccalla <amccalla@griddynamics.com> 1778627449 -0500	commit: Ignore .env file
+42852bea885e45300d78b79f7b369ca79443abe3 4f4892918d8899648d230e77cb6ab6d5fda71ee2 amccalla <amccalla@griddynamics.com> 1778627727 -0500	commit: Done

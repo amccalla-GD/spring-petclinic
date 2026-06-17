@@ -1,0 +1,18 @@
+{
+    "imageScanFindings": {
+        "findings": [],
+        "imageScanCompletedAt": "2026-05-18T20:14:35-05:00",
+        "vulnerabilitySourceUpdatedAt": "2026-05-18T20:14:35-05:00",
+        "findingSeverityCounts": {}
+    },
+    "registryId": "113304117666",
+    "repositoryName": "spring-petclinic",
+    "imageId": {
+        "imageDigest": "sha256:dbf0f690c7215cd5a34d28290ef964941fb8642a076c49dfd4b9d53e70932f6c",
+        "imageTag": "app-latest"
+    },
+    "imageScanStatus": {
+        "status": "COMPLETE",
+        "description": "The scan was completed successfully."
+    }
+}
