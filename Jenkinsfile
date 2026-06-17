@@ -1,5 +1,5 @@
 // Jenkinsfile
-def NEXUS_HOST      = "localhost:8083"   // change to your Nexus IP/hostname
+def NEXUS_HOST      = "localhost:8083"   
 def NEXUS_MAIN_HOST = "localhost:8084"
 def MR_IMAGE        = "${NEXUS_HOST}/spring-petclinic"
 def MAIN_IMAGE      = "${NEXUS_MAIN_HOST}/spring-petclinic"
