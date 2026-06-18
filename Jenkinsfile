@@ -1,6 +1,6 @@
 // Jenkinsfile
-def NEXUS_HOST      = "localhost:8083"   // change to your Nexus IP/hostname
-def NEXUS_MAIN_HOST = "localhost:8084"
+def NEXUS_HOST      = "host.docker.internal:8083"   
+def NEXUS_MAIN_HOST = "host.docker.internal:8084"
 def MR_IMAGE        = "${NEXUS_HOST}/spring-petclinic"
 def MAIN_IMAGE      = "${NEXUS_MAIN_HOST}/spring-petclinic"
 def SHORT_COMMIT    = ""
@@ -11,18 +11,19 @@ pipeline {
         label "agent"
     }
 
-    tools {
-        maven "maven-3.9"
-        jdk   "jdk-17"
-    }
+    // tools {
+    //     maven "maven-3.9"
+    //     jdk   "jdk-17"
+    // }
 
     environment {
         NEXUS_CREDS = credentials("nexus-credentials")
+        DOCKER_HOST = "unix:///var/run/docker.sock"
     }
 
     stages {
 
-        // ── Shared: always runs first ─────────────────────────────────────
+        // ── Shared: always runs first ───────────────────────────────────
         stage("Prepare") {
             steps {
                 script {
@@ -35,7 +36,16 @@ pipeline {
             }
         }
 
-        // ══ MR PIPELINE ══════════════════════════════════════════════════
+        stage("Verify Java & Maven") {
+            steps {
+                sh """
+                    java -version
+                    mvn -v
+                """
+            }
+        }
+
+        // ══ MR PIPELINE ════════════════════════════════════════════════
         stage("Checkstyle") {
             when {
                 changeRequest()   // only runs for merge/pull requests
@@ -46,9 +56,9 @@ pipeline {
             post {
                 always {
                     // Publish checkstyle report as job artifact
-                    recordIssues(
-                        tools: [checkStyle(pattern: "**/checkstyle-result.xml")]
-                    )
+                    // recordIssues(
+                    //     tools: [checkStyle(pattern: "**/checkstyle-result.xml")]
+                    // )
                     archiveArtifacts artifacts: "**/checkstyle-result.xml",
                                      allowEmptyArchive: true
                 }

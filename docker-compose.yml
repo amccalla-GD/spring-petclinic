@@ -27,6 +27,25 @@
 
 services:
 
+  postgres:
+    image: postgres:15
+    container_name: petclinic-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: petclinic
+      POSTGRES_PASSWORD: petclinic
+      POSTGRES_DB: petclinic
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U petclinic"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
   # ──────────────────────────────────────────
   # MySQL 8 database
   # ──────────────────────────────────────────
@@ -107,3 +126,4 @@ services:
 volumes:
   # Persists MySQL data across `docker compose down` cycles
   db_data:
+  pg_data:
